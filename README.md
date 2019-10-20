@@ -10,18 +10,18 @@ The easiest way to use this Action is to install it with [Sam](https://snips.git
 after the installation if it is not working try following commands:
 
 
-sudo usermod -a -G audio _snips-skills
+**sudo usermod -a -G audio _snips-skills**
 
-chmod +x /var/lib/snips/skills/skills/snips-volume-control/action-volume-control.py
+**sudo chmod +x /var/lib/snips/skills/snips-volume-control/action-volume-control.py**
 
-sudo systemctl restart snips-skill-server
+**sudo systemctl restart snips-skill-server**
 
 if that is still not working check with:
 
-amixer scontrols 
+**amixer scontrols** 
 
 which device you want to control and change line 14:
 
-m = alsaaudio.Mixer('Master')
+**m = alsaaudio.Mixer('Master')**
 
 Master into the name of the device you are using to play sound.
