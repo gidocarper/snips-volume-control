@@ -25,3 +25,8 @@ which device you want to control and change line 14:
 **m = alsaaudio.Mixer('Master')**
 
 Master into the name of the device you are using to play sound.
+
+
+and restart snips skills with
+
+**sudo systemctl restart snips-skill-server**
