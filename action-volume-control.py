@@ -33,14 +33,14 @@ def subscribe_intent_callback(hermes, intent_message):
         result_sentence = u"Lautstärke auf {} gesetzt".format(vol)
 
     elif intentname == user_intent("Volume"):
-        if intentMessage.slots.volume:
-            vol = intentMessage.slots.volume.first()
+        if intent_message.slots.volume:
+            vol = intent_message.slots.volume.first().value
             m.setvolume(int(vol))
             result_sentence = u"Lautstärke auf {} gesetzt".format(vol)
         else:
             result_sentence = u"hab's leider nicht verstanden"
 
-    hermes.publish_end_session(intentMessage.session_id, result_sentence)
+    hermes.publish_end_session(intent_message.session_id, result_sentence)
 
 if __name__ == "__main__":
     snips_config = toml.load('/etc/snips.toml')
