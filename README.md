@@ -7,8 +7,21 @@ The easiest way to use this Action is to install it with [Sam](https://snips.git
 
 `sam install actions -g https://github.com/gidocarper/snips-volume-control`
 
-## Manual installation
+after the installation if it is not working try following commands:
 
-- Clone the repository on your Pi
-- Run `setup.sh` (it will create a virtualenv, install the dependencies in it and rename config.ini.default to config.ini)
-- Run `action-timer.py`
+
+sudo usermod -a -G audio _snips-skills
+
+chmod +x /var/lib/snips/skills/skills/snips-volume-control/action-volume-control.py
+
+sudo systemctl restart snips-skill-server
+
+if that is still not working check with:
+
+amixer scontrols 
+
+which device you want to control and change line 14:
+
+m = alsaaudio.Mixer('Master')
+
+Master into the name of the device you are using to play sound.
