@@ -12,11 +12,8 @@ MQTT_BROKER_ADDRESS = "localhost:1883"
 MQTT_USERNAME = None
 MQTT_PASSWORD = None
 
-m = alsaaudio.Mixer('Digital')
+m = alsaaudio.Mixer('Master')
 vol = m.getvolume()[0]
-
-m.setmute(0)
-m.setvolume(100)
 
 def user_intent(intentname):
     return USERNAME_INTENTS + ":" + intentname
@@ -33,12 +30,15 @@ def subscribe_intent_callback(hermes, intent_message):
     elif intentname == user_intent("leiser"):
         vol = max(0,m.getvolume()[0] - 10)
         m.setvolume(vol)
-        result_sentence = "Lautstärke auf {} gesetzt".format(vol)
+        result_sentence = u"Lautstärke auf {} gesetzt".format(vol)
 
     elif intentname == user_intent("Volume"):
-        vol = intentMessage.slots.volume.first().value
-        m.setvolume(vol)
-        result_sentence = "Lautstärke auf {} gesetzt".format(vol)
+        if intentMessage.slots.volume:
+            vol = intentMessage.slots.volume.first()
+            m.setvolume(int(vol))
+            result_sentence = u"Lautstärke auf {} gesetzt".format(vol)
+        else:
+            result_sentence = u"hab's leider nicht verstanden"
 
     hermes.publish_end_session(intentMessage.session_id, result_sentence)
 
