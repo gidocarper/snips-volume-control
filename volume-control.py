@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 from hermes_python.hermes import Hermes, MqttOptions
 import datetime
@@ -27,7 +28,7 @@ def subscribe_intent_callback(hermes, intent_message):
     if intentname == user_intent("lauter"):
         vol = min(100,m.getvolume()[0] + 10)
         m.setvolume(vol)
-        result_sentence = "Lautstärke auf {} gesetzt".format(vol)
+        result_sentence = u"Lautstärke auf {} gesetzt".format(vol)
 
     elif intentname == user_intent("leiser"):
         vol = max(0,m.getvolume()[0] - 10)
@@ -39,8 +40,7 @@ def subscribe_intent_callback(hermes, intent_message):
         m.setvolume(vol)
         result_sentence = "Lautstärke auf {} gesetzt".format(vol)
 
-    current_session_id = intentMessage.session_id
-    hermes.publish_end_session(current_session_id, result_sentence)
+    hermes.publish_end_session(intentMessage.session_id, result_sentence)
 
 if __name__ == "__main__":
     snips_config = toml.load('/etc/snips.toml')
@@ -53,4 +53,7 @@ if __name__ == "__main__":
 
     mqtt_opts = MqttOptions(username=MQTT_USERNAME, password=MQTT_PASSWORD, broker_address=MQTT_BROKER_ADDRESS)
     with Hermes(mqtt_options=mqtt_opts) as h:
-        h.subscribe_intents(subscribe_intent_callback).start()
+        h.subscribe_intent("mcitar:lauter", subscribe_intent_callback)\
+            .subscribe_intent("mcitar:leiser", subscribe_intent_callback) \
+            .subscribe_intent("mcitar:Volume", subscribe_intent_callback) \
+            .start()
